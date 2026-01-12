@@ -33,8 +33,7 @@ export async function generateMetadata({
   params: { id },
 }: PageParams): Promise<Metadata> {
   try {
-    const supabase = await createServerClient();
-    const { order } = await fetchOrderDetails(supabase, {
+    const { order } = await fetchOrderDetails(createServerClient(), {
       id,
     });
 
@@ -46,8 +45,7 @@ export async function generateMetadata({
 
 export default async function Order({ params: { id } }: PageParams) {
   try {
-    const supabase = await createServerClient();
-    const { order } = await fetchOrderDetails(supabase, {
+    const { order } = await fetchOrderDetails(createServerClient(), {
       id,
     });
 

@@ -22,8 +22,7 @@ export async function generateMetadata({
   params: { slug },
 }: PageParams): Promise<Metadata> {
   try {
-    const supabase = await createServerClient();
-    const { product } = await fetchProductDetails(supabase, {
+    const { product } = await fetchProductDetails(createServerClient(), {
       slug,
     });
 
@@ -35,8 +34,7 @@ export async function generateMetadata({
 
 export default async function ProductDetails({ params: { slug } }: PageParams) {
   try {
-    const supabase = await createServerClient();
-    const { product } = await fetchProductDetails(supabase, {
+    const { product } = await fetchProductDetails(createServerClient(), {
       slug,
     });
 

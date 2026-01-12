@@ -5,8 +5,7 @@ import { NextResponse } from "next/server";
 import { siteUrl } from "@/constants/siteUrl";
 
 export async function POST() {
-  const cookieStore = await cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const supabase = createRouteHandlerClient({ cookies });
 
   // Sign the user out by invoking the signOut method of the Supabase auth client.
   await supabase.auth.signOut();

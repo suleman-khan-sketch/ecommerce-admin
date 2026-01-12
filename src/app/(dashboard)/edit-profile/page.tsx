@@ -11,8 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EditProfilePage() {
-  const supabase = await createServerClient();
-  const profile = await fetchStaffDetails(supabase);
+  const profile = await fetchStaffDetails(createServerClient());
 
   if (!profile) {
     redirect("/login");
