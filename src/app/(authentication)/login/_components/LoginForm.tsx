@@ -35,10 +35,20 @@ export default function LoginForm() {
   const form = useForm<FormData>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "test@admin.com",
-      password: "test12345",
+      email: "",
+      password: "",
     },
   });
+
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error === "unauthorized") {
+      toast.error("Access Denied", {
+        description: "You don't have permission to access the admin dashboard. Only admin users can log in.",
+        position: "top-center",
+      });
+    }
+  }, [searchParams]);
 
   const { mutate, isPending, isSuccess } = useMutation({
     mutationFn: async (formData: FormData) => {

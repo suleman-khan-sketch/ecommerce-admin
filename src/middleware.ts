@@ -29,6 +29,21 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Check if user is admin or super_admin
+  if (isLoggedIn && !isAuthRoute) {
+    const { data: profile } = await supabase.rpc("get_my_profile").maybeSingle() as {
+      data: { name: string; image_url: string | null; role: string } | null
+    };
+
+    if (!profile || (profile.role !== "admin" && profile.role !== "super_admin")) {
+      // User is logged in but not admin - redirect to login with error
+      const loginUrl = new URL("/login", req.url);
+      loginUrl.searchParams.set("error", "unauthorized");
+      await supabase.auth.signOut();
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   return res;
 }
 

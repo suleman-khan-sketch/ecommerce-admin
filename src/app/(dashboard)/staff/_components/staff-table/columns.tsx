@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Typography from "@/components/ui/typography";
 import { Skeleton } from "@/components/ui/skeleton";
-import noProfilePicture from "public/assets/no-profile-picture.jpg";
 
 import { TableSwitch } from "@/components/shared/table/TableSwitch";
 import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
@@ -42,13 +41,19 @@ export const getColumns = ({
       header: "name",
       cell: ({ row }) => (
         <div className="flex gap-2 items-center">
-          <ImagePlaceholder
-            src={row.original.image_url || noProfilePicture}
-            alt={row.original.name}
-            width={32}
-            height={32}
-            className="size-8 rounded-full"
-          />
+          {row.original.image_url ? (
+            <ImagePlaceholder
+              src={row.original.image_url}
+              alt={row.original.name}
+              width={32}
+              height={32}
+              className="size-8 rounded-full"
+            />
+          ) : (
+            <div className="size-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+              <span className="text-xs font-medium">{row.original.name.charAt(0).toUpperCase()}</span>
+            </div>
+          )}
 
           <Typography className="capitalize block truncate">
             {row.original.name}

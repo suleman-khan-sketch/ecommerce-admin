@@ -1,23 +1,17 @@
 import Link from "next/link";
-import Image from "next/image";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, FileQuestion } from "lucide-react";
 
 import Typography from "@/components/ui/typography";
-import notFoundImg from "public/assets/not-found.png";
 
 export function NotFound({ page = "Page" }: { page?: string }) {
   return (
     <div className="py-16 sm:py-20 w-full h-full grid place-items-center px-2 max-w-3xl mx-auto">
-      <div>
-        <Image
-          src={notFoundImg}
-          alt={`${page} not found`}
-          priority
-          placeholder="blur"
-          className="w-full"
-        />
+      <div className="text-center">
+        <div className="flex justify-center mb-8">
+          <FileQuestion className="w-32 h-32 text-muted-foreground opacity-50" />
+        </div>
 
-        <div className="flex flex-col text-center items-center mt-4 space-y-2">
+        <div className="flex flex-col text-center items-center space-y-4">
           <Typography
             variant="h1"
             className="text-3xl min-[360px]:text-4xl md:text-5xl"

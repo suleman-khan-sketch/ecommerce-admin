@@ -369,6 +369,7 @@ export type Database = {
           published: boolean;
           role_id: number;
           updated_at: string;
+          user_id: string | null;
         };
         Insert: {
           created_at?: string;
@@ -381,6 +382,7 @@ export type Database = {
           published?: boolean;
           role_id: number;
           updated_at?: string;
+          user_id?: string | null;
         };
         Update: {
           created_at?: string;
@@ -393,6 +395,7 @@ export type Database = {
           published?: boolean;
           role_id?: number;
           updated_at?: string;
+          user_id?: string | null;
         };
         Relationships: [
           {
@@ -400,6 +403,13 @@ export type Database = {
             columns: ["role_id"];
             isOneToOne: false;
             referencedRelation: "staff_roles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "staff_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: true;
+            referencedRelation: "users";
             referencedColumns: ["id"];
           }
         ];
@@ -452,7 +462,7 @@ export type Database = {
       notification_type: "new_order" | "low_stock";
       order_status_enum: "delivered" | "cancelled" | "pending" | "processing";
       payment_method_enum: "cash" | "card" | "credit";
-      staff_role: "super_admin" | "admin" | "cashier";
+      staff_role: "super_admin" | "admin" | "cashier" | "customer";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -587,7 +597,7 @@ export const Constants = {
       notification_type: ["new_order", "low_stock"],
       order_status_enum: ["delivered", "cancelled", "pending", "processing"],
       payment_method_enum: ["cash", "card", "credit"],
-      staff_role: ["super_admin", "admin", "cashier"],
+      staff_role: ["super_admin", "admin", "cashier", "customer"],
     },
   },
 } as const;
