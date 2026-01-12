@@ -53,9 +53,25 @@ export default function LoginForm() {
 
   const { mutate, isPending, isSuccess } = useMutation({
     mutationFn: async (formData: FormData) => {
-      await axios.post("/auth/sign-in", formData);
+      console.log("[LOGIN-FORM] Starting mutation with email:", formData.email);
+
+      try {
+        const response = await axios.post("/auth/sign-in", formData);
+        console.log("[LOGIN-FORM] Response received:", response.status);
+        console.log("[LOGIN-FORM] Response data:", response.data);
+        return response;
+      } catch (error) {
+        console.error("[LOGIN-FORM] Mutation error:", error);
+        if (axios.isAxiosError(error)) {
+          console.error("[LOGIN-FORM] Response status:", error.response?.status);
+          console.error("[LOGIN-FORM] Response data:", error.response?.data);
+        }
+        throw error;
+      }
     },
     onSuccess: () => {
+      console.log("[LOGIN-FORM] Mutation successful");
+
       toast.success("Login Success!", {
         description: searchParams.get("redirect_to")
           ? "Redirecting to your page..."
@@ -67,8 +83,11 @@ export default function LoginForm() {
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
     },
     onError: (error) => {
+      console.error("[LOGIN-FORM] onError called with:", error);
+
       if (axios.isAxiosError(error)) {
-        const { errors } = error.response?.data;
+        const { errors } = error.response?.data || {};
+        console.error("[LOGIN-FORM] Validation errors:", errors);
 
         for (const key in errors) {
           if (errors[key]) {
@@ -78,19 +97,27 @@ export default function LoginForm() {
           }
         }
       } else {
-        console.error(error);
+        console.error("[LOGIN-FORM] Non-axios error:", error);
       }
     },
   });
 
   const onSubmit = (formData: FormData) => {
+    console.log("[LOGIN-FORM] Form submitted with email:", formData.email);
     mutate(formData);
   };
 
   useEffect(() => {
+    console.log("[LOGIN-FORM] useEffect triggered, isSuccess:", isSuccess);
+
     if (isSuccess) {
       const redirectTo = searchParams.get("redirect_to");
-      router.push(redirectTo || "/");
+      console.log("[LOGIN-FORM] Redirecting to:", redirectTo || "/");
+
+      setTimeout(() => {
+        console.log("[LOGIN-FORM] Executing redirect now");
+        router.push(redirectTo || "/");
+      }, 500);
     }
   }, [isSuccess, searchParams, router]);
 
