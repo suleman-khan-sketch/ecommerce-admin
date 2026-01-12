@@ -6,7 +6,8 @@ import { signupFormSchema } from "@/app/(authentication)/signup/_components/sche
 import validateFormData from "@/helpers/validateFormData";
 
 export async function POST(request: Request) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const cookieStore = await cookies();
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   // Get form fields
   const { name, email, password, confirmPassword, privacy } =

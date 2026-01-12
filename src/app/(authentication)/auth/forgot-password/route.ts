@@ -7,7 +7,8 @@ import validateFormData from "@/helpers/validateFormData";
 import { siteUrl } from "@/constants/siteUrl";
 
 export async function POST(request: Request) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const cookieStore = await cookies();
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   // Get form fields
   const { email } = await request.json();

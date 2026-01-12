@@ -6,7 +6,8 @@ import { passwordUpdateFormSchema } from "@/app/(authentication)/update-password
 import validateFormData from "@/helpers/validateFormData";
 
 export async function POST(request: Request) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const cookieStore = await cookies();
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   // Get form fields
   const { password, confirmPassword, code } = await request.json();
