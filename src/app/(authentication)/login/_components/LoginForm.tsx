@@ -89,6 +89,13 @@ export default function LoginForm() {
         const { errors } = error.response?.data || {};
         console.error("[LOGIN-FORM] Validation errors:", errors);
 
+        // Show error details in UI
+        if (errors?.password) {
+          form.setError("password", {
+            message: errors.password,
+          });
+        }
+
         for (const key in errors) {
           if (errors[key]) {
             form.setError(key as keyof FormData, {
@@ -96,8 +103,18 @@ export default function LoginForm() {
             });
           }
         }
+
+        // Also show a toast with the full error
+        toast.error("Login Failed", {
+          description: errors?.password || "An error occurred during login",
+          position: "top-center",
+        });
       } else {
         console.error("[LOGIN-FORM] Non-axios error:", error);
+        toast.error("Login Failed", {
+          description: "An unexpected error occurred",
+          position: "top-center",
+        });
       }
     },
   });
