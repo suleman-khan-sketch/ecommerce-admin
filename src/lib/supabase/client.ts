@@ -1,15 +1,8 @@
 import { createBrowserClient as createSupabaseBrowserClient } from '@supabase/ssr';
 import { Database } from "@/types/supabase";
 
-let clientInstance: ReturnType<typeof createSupabaseBrowserClient<Database>> | null = null;
-
 export const createBrowserClient = () => {
-  // Return existing instance if available (singleton pattern)
-  if (clientInstance) {
-    return clientInstance;
-  }
-
-  clientInstance = createSupabaseBrowserClient<Database>(
+  return createSupabaseBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -19,8 +12,11 @@ export const createBrowserClient = () => {
         detectSessionInUrl: true,
         flowType: 'pkce',
       },
+      global: {
+        headers: {
+          'x-client-info': 'supabase-js-web',
+        },
+      },
     }
   );
-
-  return clientInstance;
 };

@@ -3,6 +3,9 @@ import { ThemeProvider } from "@/lib/theme-provider";
 import TanstackQueryProvider from "@/lib/tanstack-query-provider";
 
 import "@/app/globals.css";
+// Import clear-auth and error handler early to prevent infinite retry loops
+import "@/lib/clear-auth";
+import "@/lib/supabase/error-handler";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { UserProvider } from "@/contexts/UserContext";
