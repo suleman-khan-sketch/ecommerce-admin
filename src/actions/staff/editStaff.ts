@@ -11,7 +11,7 @@ export async function editStaff(
   staffId: string,
   formData: FormData
 ): Promise<StaffServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = staffFormSchema.safeParse({
     name: formData.get("name"),

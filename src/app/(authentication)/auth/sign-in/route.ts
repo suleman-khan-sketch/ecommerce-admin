@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     let supabase;
     try {
       console.log("[SIGN-IN] About to create Supabase client...");
-      supabase = createClient();
+      supabase = await createClient();
       console.log("[SIGN-IN] ✓ Supabase client created successfully");
     } catch (err) {
       console.error("[SIGN-IN] ✗ Failed to create Supabase client:", err);

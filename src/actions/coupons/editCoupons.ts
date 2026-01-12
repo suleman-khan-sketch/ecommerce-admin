@@ -11,7 +11,7 @@ export async function editCoupons(
   couponIds: string[],
   formData: FormData
 ): Promise<VServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = couponBulkFormSchema.safeParse({
     published: !!(formData.get("published") === "true"),

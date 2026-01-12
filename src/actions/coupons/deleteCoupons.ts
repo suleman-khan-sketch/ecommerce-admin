@@ -8,7 +8,7 @@ import { ServerActionResponse } from "@/types/server-action";
 export async function deleteCoupons(
   couponIds: string[]
 ): Promise<ServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const { data: couponsData, error: fetchError } = await supabase
     .from("coupons")

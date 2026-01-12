@@ -11,7 +11,7 @@ export async function editProduct(
   productId: string,
   formData: FormData
 ): Promise<ProductServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = productFormSchema.safeParse({
     name: formData.get("name"),

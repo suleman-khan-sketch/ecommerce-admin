@@ -10,7 +10,7 @@ import { CouponServerActionResponse } from "@/types/server-action";
 export async function addCoupon(
   formData: FormData
 ): Promise<CouponServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = couponFormSchema.safeParse({
     name: formData.get("name"),

@@ -31,7 +31,7 @@ export async function fetchStaff(
   }
 
   if (role) {
-    query = query.eq("staff_roles.name", role);
+    query = query.eq("staff_roles.name", role as any);
   }
 
   query = query.order("created_at", { ascending: false });

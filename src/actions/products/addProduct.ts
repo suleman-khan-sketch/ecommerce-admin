@@ -10,7 +10,7 @@ import { ProductServerActionResponse } from "@/types/server-action";
 export async function addProduct(
   formData: FormData
 ): Promise<ProductServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = productFormSchema.safeParse({
     name: formData.get("name"),

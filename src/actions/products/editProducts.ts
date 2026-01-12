@@ -11,7 +11,7 @@ export async function editProducts(
   productIds: string[],
   formData: FormData
 ): Promise<VServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = productBulkFormSchema.safeParse({
     category:

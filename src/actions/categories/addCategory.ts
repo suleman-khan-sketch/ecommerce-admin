@@ -10,7 +10,7 @@ import { CategoryServerActionResponse } from "@/types/server-action";
 export async function addCategory(
   formData: FormData
 ): Promise<CategoryServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = categoryFormSchema.safeParse({
     name: formData.get("name"),

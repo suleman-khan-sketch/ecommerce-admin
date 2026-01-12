@@ -6,7 +6,7 @@ import { siteUrl } from "@/constants/siteUrl";
 import { createClient } from "@/lib/supabase/route-handler";
 
 export async function POST(request: Request) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Get form fields
   const { email } = await request.json();

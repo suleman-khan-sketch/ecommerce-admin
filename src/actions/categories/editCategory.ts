@@ -11,7 +11,7 @@ export async function editCategory(
   categoryId: string,
   formData: FormData
 ): Promise<CategoryServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = categoryFormSchema.safeParse({
     name: formData.get("name"),

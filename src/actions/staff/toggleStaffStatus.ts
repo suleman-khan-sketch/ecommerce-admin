@@ -9,7 +9,7 @@ export async function toggleStaffPublishedStatus(
   staffId: string,
   currentPublishedStatus: boolean
 ): Promise<ServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const newPublishedStatus = !currentPublishedStatus;
 

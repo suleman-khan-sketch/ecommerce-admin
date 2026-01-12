@@ -4,7 +4,7 @@ import { siteUrl } from "@/constants/siteUrl";
 import { createClient } from "@/lib/supabase/route-handler";
 
 export async function POST() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Sign the user out by invoking the signOut method of the Supabase auth client.
   await supabase.auth.signOut();

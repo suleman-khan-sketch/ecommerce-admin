@@ -10,11 +10,7 @@ type Props<TableData, TableName extends keyof PublicTables> = {
   page: number;
   limit: number;
   name: keyof PublicTables;
-  query: PostgrestFilterBuilder<
-    PublicSchema,
-    PublicTables[TableName]["Row"],
-    TableData[]
-  >;
+  query: any;
 };
 
 type Response<TableData> = {

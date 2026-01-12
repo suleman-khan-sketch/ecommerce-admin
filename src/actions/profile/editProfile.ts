@@ -11,7 +11,7 @@ export async function editProfile(
   userId: string,
   formData: FormData
 ): Promise<ProfileServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = profileFormSchema.safeParse({
     name: formData.get("name"),

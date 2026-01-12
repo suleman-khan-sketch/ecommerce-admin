@@ -10,7 +10,7 @@ export async function changeOrderStatus(
   orderId: string,
   newOrderStatus: OrderStatus
 ): Promise<ServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const { error: dbError } = await supabase
     .from("orders")

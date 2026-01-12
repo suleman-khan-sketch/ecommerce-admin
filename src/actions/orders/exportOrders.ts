@@ -5,7 +5,7 @@ import { OrdersExport } from "@/services/orders/types";
 import { getDiscount } from "@/helpers/getDiscount";
 
 export async function exportOrders() {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const selectQuery = `
     *,

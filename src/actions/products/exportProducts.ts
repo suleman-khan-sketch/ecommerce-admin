@@ -3,7 +3,7 @@
 import { createServerActionClient } from "@/lib/supabase/server-action";
 
 export async function exportProducts() {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const selectQuery = `
     *,

@@ -5,7 +5,7 @@ import validateFormData from "@/helpers/validateFormData";
 import { createClient } from "@/lib/supabase/route-handler";
 
 export async function POST(request: Request) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Get form fields
   const { password, confirmPassword, code } = await request.json();

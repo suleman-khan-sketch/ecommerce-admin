@@ -11,7 +11,7 @@ export async function editCoupon(
   couponId: string,
   formData: FormData
 ): Promise<CouponServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = couponFormSchema.safeParse({
     name: formData.get("name"),

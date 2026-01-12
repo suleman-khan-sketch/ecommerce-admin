@@ -35,11 +35,11 @@ export async function fetchOrders(
   }
 
   if (status) {
-    query = query.eq("status", status);
+    query = query.eq("status", status as any);
   }
 
   if (method) {
-    query = query.eq("payment_method", method);
+    query = query.eq("payment_method", method as any);
   }
 
   if (startDate) {

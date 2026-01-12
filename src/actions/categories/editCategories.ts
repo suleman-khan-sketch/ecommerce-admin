@@ -11,7 +11,7 @@ export async function editCategories(
   categoryIds: string[],
   formData: FormData
 ): Promise<VServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = categoryBulkFormSchema.safeParse({
     published: !!(formData.get("published") === "true"),

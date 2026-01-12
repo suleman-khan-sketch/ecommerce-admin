@@ -9,7 +9,7 @@ export async function toggleCouponPublishedStatus(
   couponId: string,
   currentPublishedStatus: boolean
 ): Promise<ServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const newPublishedStatus = !currentPublishedStatus;
 

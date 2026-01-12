@@ -11,7 +11,7 @@ export async function editCustomer(
   customerId: string,
   formData: FormData
 ): Promise<CustomerServerActionResponse> {
-  const supabase = createServerActionClient();
+  const supabase = await createServerActionClient();
 
   const parsedData = customerFormSchema.safeParse({
     name: formData.get("name"),
