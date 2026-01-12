@@ -1,9 +1,8 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 import { loginFormSchema } from "@/app/(authentication)/login/_components/schema";
 import validateFormData from "@/helpers/validateFormData";
+import { createClient } from "@/lib/supabase/route-handler";
 
 export async function POST(request: Request) {
   try {
@@ -15,7 +14,7 @@ export async function POST(request: Request) {
     let supabase;
     try {
       console.log("[SIGN-IN] About to create Supabase client...");
-      supabase = createRouteHandlerClient({ cookies });
+      supabase = createClient();
       console.log("[SIGN-IN] ✓ Supabase client created successfully");
     } catch (err) {
       console.error("[SIGN-IN] ✗ Failed to create Supabase client:", err);

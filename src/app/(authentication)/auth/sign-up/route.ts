@@ -1,12 +1,11 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 import { signupFormSchema } from "@/app/(authentication)/signup/_components/schema";
 import validateFormData from "@/helpers/validateFormData";
+import { createClient } from "@/lib/supabase/route-handler";
 
 export async function POST(request: Request) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = createClient();
 
   // Get form fields
   const { name, email, password, confirmPassword, privacy } =
