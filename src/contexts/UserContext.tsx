@@ -1,11 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 import { Tables } from "@/types/supabase";
 import { createBrowserClient } from "@/lib/supabase/client";
+import { clearSupabaseAuth } from "@/lib/clear-auth";
 
 export type UserRole = Tables<"staff_roles">["name"];
 
@@ -30,12 +32,41 @@ const UserContext = createContext<UserContextType>({
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const supabase = createBrowserClient();
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const authErrorCount = useRef(0);
+  const lastErrorTime = useRef(0);
+  const isClearing = useRef(false);
+
+  useEffect(() => {
+    // Check for stuck auth state on mount
+    const checkAuthState = async () => {
+      try {
+        const { error } = await supabase.auth.getSession();
+        if (error && error.message.includes('refresh_token')) {
+          console.warn('Invalid refresh token detected on mount, clearing...');
+          clearSupabaseAuth();
+          router.push('/login');
+        }
+      } catch (e) {
+        console.error('Error checking auth state:', e);
+      }
+    };
+    checkAuthState();
+  }, [supabase, router]);
 
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      queryClient.invalidateQueries({ queryKey: ["user-profile"] });
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'TOKEN_REFRESHED') {
+        authErrorCount.current = 0;
+        queryClient.invalidateQueries({ queryKey: ["user-profile"] });
+      } else if (event === 'SIGNED_OUT') {
+        authErrorCount.current = 0;
+        queryClient.clear();
+      } else if (event === 'USER_UPDATED') {
+        queryClient.invalidateQueries({ queryKey: ["user-profile"] });
+      }
     });
 
     return () => {
@@ -46,17 +77,57 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const { data, isLoading } = useQuery({
     queryKey: ["user-profile"],
     queryFn: async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session?.user) {
-        return { user: null, role: null };
-      }
+      try {
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
 
-      const { data: profile } = await supabase.rpc("get_my_profile");
-      return { user: session.user, profile: profile as UserProfile };
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+
+          // Track auth errors
+          const now = Date.now();
+          if (now - lastErrorTime.current < 5000) {
+            authErrorCount.current++;
+          } else {
+            authErrorCount.current = 1;
+          }
+          lastErrorTime.current = now;
+
+          // If too many errors in short time, clear everything
+          if (authErrorCount.current > 3 && !isClearing.current) {
+            isClearing.current = true;
+            console.warn('Too many auth errors, clearing session and redirecting...');
+            clearSupabaseAuth();
+            router.push('/login');
+            return { user: null, profile: null };
+          }
+
+          await supabase.auth.signOut();
+          return { user: null, profile: null };
+        }
+
+        if (!session?.user) {
+          return { user: null, profile: null };
+        }
+
+        const { data: profile, error: profileError } = await supabase.rpc("get_my_profile");
+
+        if (profileError) {
+          console.error('Profile error:', profileError);
+          return { user: session.user, profile: null };
+        }
+
+        return { user: session.user, profile: profile as UserProfile };
+      } catch (error) {
+        console.error('Unexpected error in user profile query:', error);
+        await supabase.auth.signOut();
+        return { user: null, profile: null };
+      }
     },
     staleTime: Infinity,
+    retry: false,
   });
 
   const value = {
