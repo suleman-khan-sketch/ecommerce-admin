@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,6 +29,7 @@ import AuthProviders from "@/components/shared/auth/AuthProviders";
 type FormData = z.infer<typeof loginFormSchema>;
 
 export default function LoginForm() {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
 
@@ -89,10 +90,9 @@ export default function LoginForm() {
   useEffect(() => {
     if (isSuccess) {
       const redirectTo = searchParams.get("redirect_to");
-
-      return redirect(redirectTo || "/");
+      router.push(redirectTo || "/");
     }
-  }, [isSuccess, searchParams]);
+  }, [isSuccess, searchParams, router]);
 
   return (
     <div className="w-full">
